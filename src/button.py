@@ -1,18 +1,23 @@
-import pyfirmata as pf
 import time
 
-serial_port = 'COM3'
-board = pf.Arduino(serial_port)
+class Button():
+    def loop(self):
+        while self.running:
+            if self.button.read():
+                self.state = self.button.read() > 0.7
+                print(self.button.read())
+            time.sleep(1)
 
-it = pf.util.Iterator(board)
-it.start()
+    def stop(self):
+        self.running = False
 
-button = board.get_pin('a:3:i')
+    def start(self):
+        self.running = True
+        self.loop()
 
-running = True
-while running:
-    if button.read():
-        print(button.read())
-    time.sleep(0.1)
-
-board.exit()
+    def __init__(self, board):
+        self.board = board
+        self.running = False
+        self.button = board.get_pin('a:3:i')
+        self.button.enable_reporting()
+        self.state = False

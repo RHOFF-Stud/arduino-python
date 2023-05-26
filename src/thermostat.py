@@ -4,7 +4,6 @@ class Thermostat():
     def loop(self):
         while self.running:
             self.temperature = round(self.thermo_pin.read() * 100, 4)
-            print(self.temperature)
             time.sleep(1)
 
     def stop(self):
